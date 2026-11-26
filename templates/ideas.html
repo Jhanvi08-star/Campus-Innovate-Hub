@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ideas | Campus Innovate Hub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <style>
+      .ideas-page {
+        padding: 50px 7%;
+        background: #f8fafc;
+        min-height: calc(100vh - 80px);
+      }
+      .ideas-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 35px;
+      }
+      .ideas-header h1 {
+        font-size: 38px;
+        margin-bottom: 5px;
+      }
+      .ideas-header p {
+        color: #64748b;
+      }
+      .flash-msg {
+        background: #dcfce7;
+        color: #166534;
+        padding: 12px 18px;
+        border-radius: 8px;
+        margin-bottom: 22px;
+        font-weight: 600;
+        border: 1px solid #86efac;
+        max-width: 750px;
+      }
+      .idea-form {
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        max-width: 750px;
+        margin-bottom: 45px;
+      }
+      .idea-form h2 {
+        margin-bottom: 20px;
+      }
+      .idea-form label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+      }
+      .idea-form input,
+      .idea-form textarea,
+      .idea-form select {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 18px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-family: inherit;
+      }
+      .idea-form textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+      .idea-form button {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 13px 22px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .idea-form button:hover {
+        background: #1d4ed8;
+      }
+      .filter-bar {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 25px;
+        max-width: 1100px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .filter-bar input,
+      .filter-bar select {
+        padding: 11px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-family: inherit;
+        background: white;
+      }
+      .filter-bar input {
+        flex: 1;
+        min-width: 240px;
+      }
+      .ideas-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        max-width: 1100px;
+      }
+      .idea-card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        border: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: stretch;
+        text-align: left;
+      }
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .idea-tag {
+        display: inline-block;
+        background: #dbeafe;
+        color: #1d4ed8;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .score-badge {
+        background: #fef3c7;
+        color: #b45309;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .match-badge {
+        background: #dcfce7;
+        color: #15803d;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .idea-card h3 {
+        margin-bottom: 10px;
+        font-size: 20px;
+        color: #0f172a;
+      }
+      .idea-card p {
+        color: #475569;
+        line-height: 1.6;
+      }
+      .idea-meta {
+        margin-top: 18px;
+        padding-top: 15px;
+        border-top: 1px solid #e2e8f0;
+        font-size: 13px;
+        color: #64748b;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 25px;
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      @media (max-width: 750px) {
+        .ideas-list {
+          grid-template-columns: 1fr;
+        }
+        .ideas-header {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="logo">🚀 Campus Innovate Hub</div>
+      <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/teams">Teams</a>
+        <a href="/mentor">Mentors</a>
+        <a href="/progress">Progress</a>
+        <a href="/profile">My Profile</a>
+        <a href="/logout" class="register-btn">Logout</a>
+      </div>
+    </nav>
+
+    <main class="ideas-page">
+      <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+
+      <div class="ideas-header">
+        <div>
+          <p class="section-label">INNOVATION HUB</p>
+          <h1>💡 Student Ideas</h1>
+          <p>Share your idea and discover innovations from your campus community.</p>
+        </div>
+      </div>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for msg in messages %}
+            <div class="flash-msg">{{ msg }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <!-- SUBMIT IDEA -->
+      <div class="idea-form">
+        <h2>🚀 Submit a New Idea</h2>
+        <form method="POST">
+          <label>Idea Title</label>
+          <input type="text" name="title" placeholder="e.g. Smart Campus Navigation" required />
+
+          <label>Description</label>
+          <textarea name="description" placeholder="Describe the problem, your solution, and campus impact..." required></textarea>
+
+          <label>Category</label>
+          <select name="category" required>
+            <option value="">Select category</option>
+            <option value="Technology">Technology</option>
+            <option value="Education">Education</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Environment">Environment</option>
+            <option value="Social Impact">Social Impact</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <label>Required Skills (comma-separated)</label>
+          <input type="text" name="required_skills" placeholder="e.g. Python, Flask, MySQL, JavaScript" />
+
+          <button type="submit">Submit Idea 🚀</button>
+        </form>
+      </div>
+
+      <!-- SINGLE SEARCH & FILTER BAR -->
+      <h2 style="margin-bottom: 15px">Latest Ideas</h2>
+      <form method="GET" action="/ideas" class="filter-bar">
+        <input type="text" name="q" value="{{ search_q or '' }}" placeholder="🔍 Search by project title, keyword, or skill..." />
+        <select name="category">
+          <option value="">All Categories</option>
+          <option value="Technology" {% if cat_filter is eq 'Technology' %}selected{% endif %}>Technology</option>
+          <option value="Education" {% if cat_filter is eq 'Education' %}selected{% endif %}>Education</option>
+          <option value="Healthcare" {% if cat_filter is eq 'Healthcare' %}selected{% endif %}>Healthcare</option>
+          <option value="Environment" {% if cat_filter is eq 'Environment' %}selected{% endif %}>Environment</option>
+          <option value="Social Impact" {% if cat_filter is eq 'Social Impact' %}selected{% endif %}>Social Impact</option>
+          <option value="Other" {% if cat_filter is eq 'Other' %}selected{% endif %}>Other</option>
+        </select>
+        <button type="submit" style="background: #2563eb; color: white; border: none; padding: 11px 18px; border-radius: 8px; font-weight: 700; cursor: pointer;">Filter</button>
+        {% if search_q or cat_filter %}
+        <a href="/ideas" style="padding: 11px 14px; color: #64748b; text-decoration: none; font-weight: 600;">Reset</a>
+        {% endif %}
+      </form>
+
+      <!-- IDEAS LIST -->
+      <div class="ideas-list">
+        {% for idea in ideas %}
+        <div class="idea-card">
+          <div>
+            <div class="badge-row">
+              <span class="idea-tag">{{ idea.category or "General" }}</span>
+              <span class="score-badge">⚡ Score: {{ idea.innovation_score }}/100</span>
+              {% if idea.get('skill_match', 0) > 0 %}
+              <span class="match-badge">🎯 {{ idea.skill_match }}% Skill Match</span>
+              {% endif %}
+            </div>
+
+            <h3>{{ idea.title }}</h3>
+            <p>{{ idea.description }}</p>
+
+            {% if idea.required_skills %}
+            <p style="margin-top: 12px">
+              <strong>Skills:</strong> {{ idea.required_skills }}
+            </p>
+            {% endif %}
+          </div>
+
+          <div class="idea-meta">
+            <span>👤 {{ idea.author }} • 📌 {{ idea.status }}</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <a href="/teams" style="color: #2563eb; font-weight: 700; text-decoration: none">
+                Join Team →
+              </a>
+              {% if idea.user_id is eq current_user_id %}
+  <a href="/edit-idea/{{ idea.id }}" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; padding: 5px 10px; border-radius: 7px; font-size: 12px; font-weight: 700; text-decoration: none;">Edit</a>
+  <form method="POST" style="margin: 0;" onsubmit="return confirm('Delete this idea?');">
+    <input type="hidden" name="action" value="delete" />
+    <input type="hidden" name="idea_id" value="{{ idea.id }}" />
+    <button type="submit" style="background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; padding: 5px 10px; border-radius: 7px; font-size: 12px; font-weight: 700; cursor: pointer;">Delete</button>
+  </form>
+{% endif %}
+              
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="idea-card">
+          <h3>No matching ideas found</h3>
+          <p>Try clearing your filter or be the first student to submit an innovative idea!</p>
+        </div>
+        {% endfor %}
+      </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

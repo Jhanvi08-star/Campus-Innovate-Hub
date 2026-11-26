@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify OTP | Campus Innovate Hub</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <style>
+      .otp-page {
+        min-height: calc(100vh - 80px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8fafc;
+        padding: 30px;
+      }
+      .otp-card {
+        background: white;
+        padding: 36px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        max-width: 440px;
+        width: 100%;
+        text-align: center;
+      }
+      .otp-input {
+        width: 100%;
+        padding: 14px;
+        font-size: 22px;
+        letter-spacing: 8px;
+        text-align: center;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        margin: 20px 0;
+        box-sizing: border-box;
+        font-weight: 700;
+      }
+      .otp-btn {
+        width: 100%;
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 13px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 15px;
+      }
+      .otp-btn:hover {
+        background: #1d4ed8;
+      }
+      .flash-msg {
+        background: #fef2f2;
+        color: #b91c1c;
+        padding: 10px 14px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">🚀 Campus Innovate Hub</div>
+      <div class="nav-links">
+        <a href="/login">Login</a>
+      </div>
+    </nav>
+
+    <main class="otp-page">
+      <div class="otp-card">
+        <h2>📧 Verify Your Email</h2>
+        <p style="color: #64748b; margin-top: 8px; font-size: 14px">
+          We sent a 6-digit verification code to<br />
+          <strong>{{ email }}</strong>
+        </p>
+
+        {% with messages = get_flashed_messages() %} {% if messages %} {% for
+        msg in messages %}
+        <div class="flash-msg">{{ msg }}</div>
+        {% endfor %} {% endif %} {% endwith %}
+
+        <form method="POST">
+          <input
+            type="text"
+            name="otp"
+            class="otp-input"
+            maxlength="6"
+            placeholder="000000"
+            required
+          />
+          <button type="submit" class="otp-btn">Verify & Create Account</button>
+        </form>
+
+        <p style="margin-top: 18px; font-size: 13px; color: #64748b">
+          Wrong email?
+          <a href="/register" style="color: #2563eb">Register again</a>
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

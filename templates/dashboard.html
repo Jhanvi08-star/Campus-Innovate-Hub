@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | Campus Innovate Hub</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <style>
+      .dashboard {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 2.2rem 1.5rem;
+      }
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 1.4rem;
+        margin-top: 1.5rem;
+      }
+      .dashboard-bottom {
+        margin-top: 1.8rem;
+      }
+      .activity-card {
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .nav-links a.active-link {
+        color: #2563eb;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <a href="/dashboard" class="logo" style="text-decoration: none"
+        >🚀 Campus Innovate Hub</a
+      >
+      <div class="nav-links">
+        <a href="/dashboard" class="active-link">Dashboard</a>
+        <a href="/ideas">Ideas</a>
+        <a href="/teams">Teams</a>
+        <a href="/mentor">Mentors</a>
+        <a href="/progress">Progress</a>
+        <a href="/profile">My Profile</a>
+        <a href="/logout" class="register-btn">Logout</a>
+      </div>
+    </nav>
+
+    <main class="dashboard">
+      <div
+        style="
+          background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+          border: 1px solid #dbeafe;
+          border-radius: 18px;
+          padding: 26px 32px;
+          margin-bottom: 32px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 16px;
+        "
+      >
+        <div>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              flex-wrap: wrap;
+            "
+          >
+            <h1 style="margin: 0; font-size: 28px; color: #0f172a">
+              Welcome back, {{ name }} 👋
+            </h1>
+            <span
+              style="
+                background: #2563eb;
+                color: white;
+                padding: 5px 14px;
+                border-radius: 99px;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.4px;
+                text-transform: uppercase;
+              "
+            >
+              {{ role }}
+            </span>
+          </div>
+          <p style="color: #64748b; margin: 8px 0 0; font-size: 14px">
+            Manage your ideas, collaborate with teammates, and track your
+            project milestones.
+          </p>
+        </div>
+
+        <a
+          href="/ideas"
+          style="
+            background: #2563eb;
+            color: white;
+            padding: 11px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+          "
+        >
+          + Submit New Idea
+        </a>
+      </div>
+
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 14px;
+          margin-bottom: 28px;
+        "
+      >
+        <div
+          style="
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 16px 20px;
+          "
+        >
+          <p
+            style="margin: 0; font-size: 12px; font-weight: 700; color: #64748b"
+          >
+            TOTAL CAMPUS IDEAS
+          </p>
+          <h2 style="margin: 6px 0 0; color: #2563eb; font-size: 24px">
+            {{ stats.total_ideas }}
+          </h2>
+        </div>
+        <div
+          style="
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 16px 20px;
+          "
+        >
+          <p
+            style="margin: 0; font-size: 12px; font-weight: 700; color: #64748b"
+          >
+            AVG INNOVATION SCORE
+          </p>
+          <h2 style="margin: 6px 0 0; color: #d97706; font-size: 24px">
+            {{ stats.avg_score }}/100
+          </h2>
+        </div>
+        <div
+          style="
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 16px 20px;
+          "
+        >
+          <p
+            style="margin: 0; font-size: 12px; font-weight: 700; color: #64748b"
+          >
+            ACTIVE TEAMS
+          </p>
+          <h2 style="margin: 6px 0 0; color: #16a34a; font-size: 24px">
+            {{ stats.total_teams }}
+          </h2>
+        </div>
+        <div
+          style="
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 16px 20px;
+          "
+        >
+          <p
+            style="margin: 0; font-size: 12px; font-weight: 700; color: #64748b"
+          >
+            VERIFIED MENTORS
+          </p>
+          <h2 style="margin: 6px 0 0; color: #7e22ce; font-size: 24px">
+            {{ stats.total_mentors }}
+          </h2>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <div class="dashboard-icon">💡</div>
+          <h2>Ideas</h2>
+          <p>Share innovative ideas and discover ideas from other students.</p>
+          <a href="/ideas">Explore Ideas →</a>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="dashboard-icon">👨‍🏫</div>
+          <h2>Mentors</h2>
+          <p>Connect with mentors and get guidance for your project.</p>
+          <a href="/mentor">Find Mentors →</a>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="dashboard-icon">👥</div>
+          <h2>My Team</h2>
+          <p>Collaborate with students and build your project team.</p>
+          <a href="/teams">View Team →</a>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="dashboard-icon">📊</div>
+          <h2>Project Progress</h2>
+          <p>
+            Track milestones and monitor the progress of your innovation
+            project.
+          </p>
+          <a href="/progress">View Progress →</a>
+        </div>
+      </div>
+
+      <section class="dashboard-bottom">
+        <div class="activity-card">
+          <h2>🚀 Your Innovation Journey</h2>
+
+          <div class="progress-line">
+            <div class="step active">
+              <span>1</span>
+              <p>Account Created</p>
+            </div>
+
+            <div class="step active">
+              <span>2</span>
+              <p>Join the Hub</p>
+            </div>
+
+            <div class="step {% if has_idea %}active{% endif %}">
+              <span>3</span>
+              <p>Build Your Idea</p>
+            </div>
+
+            <div class="step {% if is_launched %}active{% endif %}">
+              <span>4</span>
+              <p>Launch Project</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

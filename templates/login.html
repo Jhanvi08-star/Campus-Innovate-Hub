@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Login | Campus Innovate Hub</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .box {
+        background: white;
+        width: 350px;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      h1 {
+        text-align: center;
+        color: #2563eb;
+      }
+
+      h2 {
+        text-align: center;
+      }
+
+      input,
+      button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+      }
+
+      button {
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      a {
+        text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="box">
+      <h1>Campus Innovate Hub</h1>
+      <h2>Login</h2>
+
+      {% with messages = get_flashed_messages() %} {% if messages %} {% for msg
+      in messages %}
+      <div
+        style="
+          background: #fee2e2;
+          color: #991b1b;
+          padding: 12px;
+          border-radius: 8px;
+          margin-bottom: 16px;
+          font-weight: 600;
+          border: 1px solid #fca5a5;
+        "
+      >
+        {{ msg }}
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <form method="POST">
+        <label>Email</label>
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter your email"
+          required
+        />
+
+        <label>Password</label>
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+        />
+
+        <p style="text-align: right; margin: 6px 0 14px; font-size: 13.5px">
+          <a
+            href="/forgot-password"
+            style="color: #2563eb; font-weight: 600; text-decoration: none"
+            >Forgot Password?</a
+          >
+        </p>
+
+        <button type="submit">Login</button>
+      </form>
+
+      <p>
+        Don't have an account?
+        <a href="/register">Create Account</a>
+      </p>
+
+      <a href="/">← Back to Home</a>
+    </div>
+  </body>
+</html>

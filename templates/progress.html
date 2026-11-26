@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Workspace & Progress | Campus Innovate Hub</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <style>
+      .progress-page {
+        padding: 50px 7%;
+        background: #f8fafc;
+        min-height: calc(100vh - 80px);
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 22px;
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .flash-msg {
+        background: #dcfce7;
+        color: #166534;
+        padding: 12px 18px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: 600;
+        max-width: 980px;
+      }
+      .workspace-card {
+        background: white;
+        padding: 28px;
+        border-radius: 16px;
+        border: 1.5px solid #e2e8f0;
+        margin-bottom: 26px;
+        max-width: 980px;
+      }
+      .team-strip {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 12px 16px;
+        border-radius: 10px;
+        margin: 14px 0;
+        font-size: 13.5px;
+      }
+      .stages-bar {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin: 18px 0;
+      }
+      .stage-box {
+        padding: 12px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        color: #64748b;
+      }
+      .stage-box.done {
+        background: #dcfce7;
+        border-color: #86efac;
+        color: #166534;
+      }
+      .update-form {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-top: 16px;
+        flex-wrap: wrap;
+      }
+      .update-form select {
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        font-family: inherit;
+      }
+      .update-form button {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .chat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 18px;
+        margin-top: 22px;
+        padding-top: 20px;
+        border-top: 1px solid #e2e8f0;
+      }
+      .chat-box {
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .chat-messages {
+        max-height: 180px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .msg-item {
+        background: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      @media (max-width: 700px) {
+        .stages-bar {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">🚀 Campus Innovate Hub</div>
+      <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/ideas">Ideas</a>
+        <a href="/teams">Teams</a>
+        <a href="/mentor">Mentors</a>
+        <a href="/profile">My Profile</a>
+        <a href="/logout" class="register-btn">Logout</a>
+      </div>
+    </nav>
+
+    <main class="progress-page">
+      <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+      <div style="margin-bottom: 28px">
+        <p class="section-label">PROJECT WORKSPACE & MILESTONES</p>
+        <h1>📊 Active Project Workspace</h1>
+        <p style="color: #64748b">
+          Collaborate with your team, discuss doubts with your mentor, and track
+          build milestones.
+        </p>
+      </div>
+
+      {% with messages = get_flashed_messages() %} {% if messages %} {% for msg
+      in messages %}
+      <div class="flash-msg">{{ msg }}</div>
+      {% endfor %} {% endif %} {% endwith %} {% for p in projects %}
+      <div class="workspace-card">
+        <div
+          style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap"
+        >
+          <span
+            style="
+              background: #dbeafe;
+              color: #1d4ed8;
+              padding: 4px 10px;
+              border-radius: 20px;
+              font-size: 12px;
+              font-weight: 700;
+            "
+            >{{ p.category }}</span
+          >
+          <span
+            style="
+              background: #fef3c7;
+              color: #b45309;
+              padding: 4px 10px;
+              border-radius: 20px;
+              font-size: 12px;
+              font-weight: 700;
+            "
+            >⚡ Innovation Score: {{ p.innovation_score }}/100</span
+          >
+          {% if p.mentor_info %}
+          <span
+            style="
+              background: #f3e8ff;
+              color: #6b21a8;
+              padding: 4px 10px;
+              border-radius: 20px;
+              font-size: 12px;
+              font-weight: 700;
+            "
+            >🎓 Mentor: {{ p.mentor_info.mentor_name }} ({{ p.mentor_info.status
+            }})</span
+          >
+          {% endif %}
+        </div>
+
+        <h2 style="margin-bottom: 8px">{{ p.title }}</h2>
+        <p style="color: #475569; line-height: 1.5; margin-bottom: 10px">
+          {{ p.description }}
+        </p>
+        <p style="font-size: 13px; color: #64748b">
+          <strong>Project Lead:</strong> {{ p.lead_name }} •
+          <strong>Tech Stack:</strong> {{ p.required_skills or 'General' }}
+        </p>
+
+        <div class="team-strip">
+          <strong
+            >👥 Team Collaborators ({{ p.team_members|length }}/4):</strong
+          >
+          {% for m in p.team_members %}
+          <span style="margin-left: 10px"
+            >{{ m.name }} (<a href="mailto:{{ m.email }}" style="color: #2563eb"
+              >{{ m.email }}</a
+            >)</span
+          >
+          {% endfor %}
+        </div>
+
+        <div class="stages-bar">
+          {% for num, label in stages.items() %}
+          <div
+            class="stage-box {% if p.current_stage is ge num %}done{% endif %}"
+          >
+            Stage {{ num }}<br />{{ label }}
+          </div>
+          {% endfor %}
+        </div>
+
+        <form method="POST" class="update-form">
+          <input type="hidden" name="action" value="update_stage" />
+          <input type="hidden" name="idea_id" value="{{ p.idea_id }}" />
+          <label style="font-weight: 600; font-size: 14px"
+            >Update Current Stage:</label
+          >
+          <select name="current_stage">
+            {% for num, label in stages.items() %}
+            <option
+              value="{{ num }}"
+              {%
+              if
+              p.current_stage
+              is
+              eq
+              num
+              %}selected{%
+              endif
+              %}
+            >
+              Stage {{ num }}: {{ label }}
+            </option>
+            {% endfor %}
+          </select>
+          <button type="submit">Update Milestone ✓</button>
+        </form>
+
+        <!-- TEAM GROUP CHAT & MENTOR DOUBT THREAD -->
+        <div class="chat-grid">
+          <div
+            class="chat-box"
+            style="background: #f8fafc; border: 1px solid #e2e8f0"
+          >
+            <h4 style="margin: 0 0 10px; color: #0f172a">💬 Team Group Chat</h4>
+            <div class="chat-messages">
+              {% for m in p.team_chat %}
+              <div class="msg-item" style="border: 1px solid #e2e8f0">
+                <strong style="color: #2563eb">{{ m.sender_name }}:</strong> {{
+                m.message }}
+              </div>
+              {% else %}
+              <p style="color: #94a3b8; font-size: 12.5px; margin: 0">
+                No team messages yet. Coordinate tasks with your teammates here!
+              </p>
+              {% endfor %}
+            </div>
+            <form method="POST" style="display: flex; gap: 8px">
+              <input type="hidden" name="action" value="send_message" />
+              <input type="hidden" name="idea_id" value="{{ p.idea_id }}" />
+              <input type="hidden" name="channel" value="team" />
+              <input
+                type="text"
+                name="message"
+                placeholder="Write a message to team..."
+                required
+                style="
+                  flex: 1;
+                  padding: 9px 12px;
+                  border: 1px solid #cbd5e1;
+                  border-radius: 8px;
+                  font-size: 13px;
+                "
+              />
+              <button
+                type="submit"
+                style="
+                  background: #2563eb;
+                  color: white;
+                  border: none;
+                  padding: 9px 14px;
+                  border-radius: 8px;
+                  font-weight: 700;
+                  cursor: pointer;
+                "
+              >
+                Send
+              </button>
+            </form>
+          </div>
+
+          <div
+            class="chat-box"
+            style="background: #faf5ff; border: 1px solid #e9d5ff"
+          >
+            <h4 style="margin: 0 0 10px; color: #581c87">
+              🎓 Mentor Doubts & Guidance
+            </h4>
+            <div class="chat-messages">
+              {% for m in p.mentor_chat %}
+              <div class="msg-item" style="border: 1px solid #e9d5ff">
+                <strong style="color: #7e22ce"
+                  >{{ m.sender_name }} ({{ m.sender_role|capitalize }}):</strong
+                >
+                {{ m.message }}
+              </div>
+              {% else %}
+              <p style="color: #94a3b8; font-size: 12.5px; margin: 0">
+                Ask technical doubts or share updates with your mentor here.
+              </p>
+              {% endfor %}
+            </div>
+            <form method="POST" style="display: flex; gap: 8px">
+              <input type="hidden" name="action" value="send_message" />
+              <input type="hidden" name="idea_id" value="{{ p.idea_id }}" />
+              <input type="hidden" name="channel" value="mentor" />
+              <input
+                type="text"
+                name="message"
+                placeholder="Ask mentor a question..."
+                required
+                style="
+                  flex: 1;
+                  padding: 9px 12px;
+                  border: 1px solid #d8b4fe;
+                  border-radius: 8px;
+                  font-size: 13px;
+                "
+              />
+              <button
+                type="submit"
+                style="
+                  background: #7e22ce;
+                  color: white;
+                  border: none;
+                  padding: 9px 14px;
+                  border-radius: 8px;
+                  font-weight: 700;
+                  cursor: pointer;
+                "
+              >
+                Ask
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="workspace-card">
+        <h3>No projects in your workspace yet</h3>
+        <p style="color: #64748b; margin: 8px 0 14px">
+          Submit an idea or join an existing project team to unlock your shared
+          workspace.
+        </p>
+        <a
+          href="/ideas"
+          style="color: #2563eb; font-weight: 700; text-decoration: none"
+          >Explore Ideas →</a
+        >
+      </div>
+      {% endfor %}
+    </main>
+  </body>
+</html>

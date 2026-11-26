@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Idea | Campus Innovate Hub</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <style>
+      .edit-page {
+        padding: 50px 7%;
+        background: #f8fafc;
+        min-height: calc(100vh - 80px);
+      }
+      .edit-card {
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        max-width: 720px;
+      }
+      .edit-card label {
+        display: block;
+        margin: 14px 0 6px;
+        font-weight: 600;
+      }
+      .edit-card input,
+      .edit-card textarea,
+      .edit-card select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-family: inherit;
+      }
+      .edit-card textarea {
+        min-height: 120px;
+      }
+      .edit-card button {
+        margin-top: 18px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 12px 22px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">🚀 Campus Innovate Hub</div>
+      <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/ideas">Ideas</a>
+        <a href="/teams">Teams</a>
+        <a href="/progress">Progress</a>
+        <a href="/logout" class="register-btn">Logout</a>
+      </div>
+    </nav>
+    <main class="edit-page">
+      <a
+        href="/ideas"
+        style="
+          color: #2563eb;
+          font-weight: 600;
+          text-decoration: none;
+          display: inline-block;
+          margin-bottom: 20px;
+        "
+        >← Back to Ideas</a
+      >
+      <div class="edit-card">
+        <h2>✏️ Edit Project Idea</h2>
+        <p style="color: #64748b; font-size: 14px; margin-bottom: 16px">
+          Updating your idea automatically recalculates its Rule-Based
+          Innovation Score.
+        </p>
+        <form method="POST">
+          <label>Idea Title</label>
+          <input type="text" name="title" value="{{ idea.title }}" required />
+
+          <label>Description</label>
+          <textarea name="description" required>
+{{ idea.description }}</textarea
+          >
+
+          <label>Category</label>
+          <select name="category" required>
+            {% for cat in ['Technology', 'Education', 'Healthcare',
+            'Environment', 'Social Impact', 'Other'] %}
+            <option
+              value="{{ cat }}"
+              {%
+              if
+              idea.category
+              is
+              eq
+              cat
+              %}selected{%
+              endif
+              %}
+            >
+              {{ cat }}
+            </option>
+            {% endfor %}
+          </select>
+
+          <label>Required Skills (comma-separated)</label>
+          <input
+            type="text"
+            name="required_skills"
+            value="{{ idea.required_skills or '' }}"
+          />
+
+          <button type="submit">Save Changes & Re-Score ✓</button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

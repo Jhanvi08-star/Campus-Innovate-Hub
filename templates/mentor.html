@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mentors | Campus Innovate Hub</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <style>
+      .mentor-page {
+        padding: 50px 7%;
+        background: #f8fafc;
+        min-height: calc(100vh - 80px);
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 25px;
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .flash-msg {
+        background: #dcfce7;
+        color: #166534;
+        padding: 12px 18px;
+        border-radius: 8px;
+        margin-bottom: 22px;
+        font-weight: 600;
+        max-width: 1100px;
+      }
+      .mentor-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 22px;
+        max-width: 1100px;
+        margin-bottom: 45px;
+      }
+      .mentor-card {
+        background: white;
+        padding: 26px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+      }
+      .mentor-card select,
+      .mentor-card input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-family: inherit;
+      }
+      .mentor-card button {
+        width: 100%;
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 11px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 12px;
+      }
+      .req-box {
+        background: white;
+        padding: 22px;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        max-width: 1100px;
+        margin-bottom: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .status-pill {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        background: #fef3c7;
+        color: #b45309;
+      }
+      .status-Accepted {
+        background: #dcfce7;
+        color: #15803d;
+      }
+      .status-Rejected {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">🚀 Campus Innovate Hub</div>
+      <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/ideas">Ideas</a>
+        <a href="/teams">Teams</a>
+        <a href="/progress">Progress</a>
+        <a href="/logout" class="register-btn">Logout</a>
+      </div>
+    </nav>
+
+    <main class="mentor-page">
+      <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+
+      {% with messages = get_flashed_messages() %}{% if messages %}{% for msg in
+      messages %}
+      <div class="flash-msg">{{ msg }}</div>
+      {% endfor %}{% endif %}{% endwith %} {% if role == 'mentor' %}
+      <div style="margin-bottom: 24px">
+        <p class="section-label">MENTOR PANEL</p>
+        <h1>📩 Incoming Mentorship Requests</h1>
+        <p style="color: #64748b">
+          Review student project ideas and accept or decline mentorship
+          requests.
+        </p>
+      </div>
+
+      {% for r in incoming_requests %}
+      <div class="req-box">
+        <div>
+          <h3>{{ r.idea_title or 'General Project Guidance' }}</h3>
+          <p style="color: #475569; font-size: 14px">
+            Student: <strong>{{ r.student_name }}</strong> (<a
+              href="mailto:{{ r.student_email }}"
+              >{{ r.student_email }}</a
+            >)
+          </p>
+          <p style="color: #64748b; font-size: 13px; margin-top: 4px">
+            "{{ r.message }}"
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center">
+          <span class="status-pill status-{{ r.status }}">{{ r.status }}</span>
+          {% if r.status == 'Pending' %}
+          <form method="POST" style="display: flex; gap: 8px; margin: 0">
+            <input type="hidden" name="action" value="respond_request" />
+            <input type="hidden" name="request_id" value="{{ r.id }}" />
+            <button
+              type="submit"
+              name="decision"
+              value="Accepted"
+              style="
+                background: #16a34a;
+                color: white;
+                border: none;
+                padding: 8px 14px;
+                border-radius: 6px;
+                font-weight: 700;
+                cursor: pointer;
+              "
+            >
+              Accept ✓
+            </button>
+            <button
+              type="submit"
+              name="decision"
+              value="Rejected"
+              style="
+                background: #dc2626;
+                color: white;
+                border: none;
+                padding: 8px 14px;
+                border-radius: 6px;
+                font-weight: 700;
+                cursor: pointer;
+              "
+            >
+              Reject ✕
+            </button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+      {% else %}
+      <div class="req-box">
+        <p style="color: #64748b">No mentorship requests received yet.</p>
+      </div>
+      {% endfor %} {% endif %}
+
+      <div style="margin: 30px 0 24px">
+        <p class="section-label">GUIDANCE & COLLABORATION</p>
+        <h1>👨‍🏫 Find a Mentor</h1>
+        <p style="color: #64748b">
+          Connect with experienced mentors and get guidance for your innovation
+          project.
+        </p>
+      </div>
+
+      <div class="mentor-grid">
+        {% for m in mentors %}
+        <div class="mentor-card">
+          <h3>{{ m.name }}</h3>
+          <p
+            style="
+              color: #2563eb;
+              font-weight: 600;
+              font-size: 14px;
+              margin: 4px 0 10px;
+            "
+          >
+            {{ m.expertise }}
+          </p>
+          <p style="font-size: 14px; color: #475569">
+            <strong>Experience:</strong> {{ m.experience }}
+          </p>
+          <p style="font-size: 14px; color: #64748b; margin: 8px 0">
+            {{ m.bio }}
+          </p>
+          <span
+            style="
+              background: #dcfce7;
+              color: #15803d;
+              padding: 4px 10px;
+              border-radius: 20px;
+              font-size: 12px;
+              font-weight: 700;
+            "
+            >• {{ m.availability }}</span
+          >
+
+          {% if role == 'student' %}
+          <form method="POST">
+            <input type="hidden" name="action" value="send_request" />
+            <input type="hidden" name="mentor_id" value="{{ m.id }}" />
+            <select name="idea_id">
+              <option value="">Select your project (optional)</option>
+              {% for idea in my_ideas %}
+              <option value="{{ idea.id }}">{{ idea.title }}</option>
+              {% endfor %}
+            </select>
+            <input
+              type="text"
+              name="message"
+              placeholder="Write a short note to mentor..."
+              required
+            />
+            <button type="submit">Request Mentor 🤝</button>
+          </form>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      {% if role == 'student' and sent_requests %}
+      <h2 style="margin-bottom: 14px">📤 My Sent Mentorship Requests</h2>
+      {% for sr in sent_requests %}
+      <div class="req-box">
+        <div>
+          <strong>{{ sr.mentor_name }}</strong> — Project:
+          <em>{{ sr.idea_title or 'General Guidance' }}</em>
+          <p style="color: #64748b; font-size: 13px; margin-top: 4px">
+            "{{ sr.message }}"
+          </p>
+        </div>
+        <span class="status-pill status-{{ sr.status }}">{{ sr.status }}</span>
+      </div>
+      {% endfor %} {% endif %}
+    </main>
+  </body>
+</html>

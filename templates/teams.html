@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teams | Campus Innovate Hub</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <style>
+      .teams-page {
+        padding: 50px 7%;
+        background: #f8fafc;
+        min-height: calc(100vh - 80px);
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 25px;
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .flash-msg {
+        background: #dcfce7;
+        color: #166534;
+        padding: 12px 18px;
+        border-radius: 8px;
+        margin-bottom: 22px;
+        font-weight: 600;
+        max-width: 1100px;
+      }
+      .teams-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+        gap: 22px;
+        max-width: 1100px;
+      }
+      .team-card {
+        background: white;
+        padding: 26px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .team-card h3 {
+        font-size: 20px;
+        margin-bottom: 6px;
+        color: #0f172a;
+      }
+      .member-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 12px 0 18px;
+      }
+      .member-pill {
+        background: #f1f5f9;
+        padding: 9px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #334155;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .member-pill a {
+        color: #2563eb;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .avatar-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #2563eb;
+        color: white;
+        font-weight: 700;
+        font-size: 11px;
+        margin-right: 6px;
+      }
+      .btn-primary {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+      }
+      .btn-workspace {
+        background: #0f172a;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+      }
+      .joined-badge {
+        background: #dcfce7;
+        color: #15803d;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">🚀 Campus Innovate Hub</div>
+      <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/ideas">Ideas</a>
+        <a href="/mentor">Mentors</a>
+        <a href="/progress">Progress</a>
+        <a href="/profile">My Profile</a>
+        <a href="/logout" class="register-btn">Logout</a>
+      </div>
+    </nav>
+
+    <main class="teams-page">
+      <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+      <div style="margin-bottom: 28px">
+        <p class="section-label">COLLABORATION</p>
+        <h1>👥 Project Teams</h1>
+        <p style="color: #64748b">
+          Join active campus teams (max 4 members), connect with teammates via
+          email, and collaborate in the project workspace.
+        </p>
+      </div>
+
+      {% with messages = get_flashed_messages() %} {% if messages %} {% for msg
+      in messages %}
+      <div class="flash-msg">{{ msg }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <div class="teams-grid">
+        {% for team in teams %}
+        <div class="team-card">
+          <div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+              "
+            >
+              <h3>{{ team.team_name }}</h3>
+              {% if team.is_member %}<span class="joined-badge">✓ Joined</span
+              >{% endif %}
+            </div>
+            <p style="color: #64748b; font-size: 14px; margin-bottom: 10px">
+              Project: <strong>{{ team.idea_title }}</strong> • Lead: {{
+              team.lead_name }}
+            </p>
+            <p style="font-size: 14px; margin-bottom: 12px">
+              <strong>Looking for:</strong> {{ team.required_skills or 'Open to
+              all skills' }}
+            </p>
+
+            <strong style="font-size: 14px">
+              Current Members ({{ team.members|length }}/4) & Contact:
+            </strong>
+            <div class="member-list">
+              {% for m in team.members %}
+              <div class="member-pill">
+                <span>
+                  <span class="avatar-badge">{{ m.name[0]|upper }}</span>
+                  <strong>{{ m.name }}</strong> {% if m.skills %}({{ m.skills
+                  }}){% endif %}
+                </span>
+                <a href="mailto:{{ m.email }}">📧 {{ m.email }}</a>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              gap: 10px;
+              align-items: center;
+              margin-top: 8px;
+            "
+          >
+            {% if team.is_member %}
+            <a href="/progress" class="btn-workspace"
+              >Open Project Workspace →</a
+            >
+            {% if not team.is_lead %}
+            <form
+              method="POST"
+              style="margin: 0"
+              onsubmit="return confirm('Leave this team?');"
+            >
+              <input type="hidden" name="team_id" value="{{ team.team_id }}" />
+              <input type="hidden" name="action" value="leave" />
+              <button
+                type="submit"
+                style="
+                  background: #fee2e2;
+                  color: #b91c1c;
+                  border: 1px solid #fecaca;
+                  padding: 10px 14px;
+                  border-radius: 8px;
+                  font-weight: 700;
+                  cursor: pointer;
+                  font-size: 13.5px;
+                "
+              >
+                Leave Team
+              </button>
+            </form>
+            {% endif %} {% elif team.members|length >= 4 %}
+            <span
+              style="
+                background: #fee2e2;
+                color: #b91c1c;
+                padding: 9px 14px;
+                border-radius: 8px;
+                font-weight: 700;
+                font-size: 13px;
+              "
+            >
+              Team Full (4/4)
+            </span>
+            {% else %}
+            <form method="POST" style="margin: 0">
+              <input type="hidden" name="team_id" value="{{ team.team_id }}" />
+              <button type="submit" class="btn-primary">Join Team +</button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </main>
+  </body>
+</html>
