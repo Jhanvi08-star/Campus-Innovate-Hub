@@ -14,10 +14,12 @@ SENDER_APP_PASSWORD = "hcsv jjnq kfdu kmjt"
 # ---------------- DB CONNECTION HELPER ----------------
 def get_db():
     return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="root123",
-        database="campus_innovate_hub"
+        host="mysql-19cb6076-campus-innovate-hub.i.aivencloud.com",
+        port=24395,
+        user="avnadmin",
+        password="AAPKA_AIVEN_PASSWORD",
+        database="defaultdb",
+        ssl_disabled=False
     )
 
 
